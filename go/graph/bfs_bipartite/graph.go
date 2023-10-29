@@ -84,15 +84,13 @@ const (
 // Έλεγχος αν ένα γράφημα είναι διχοτομίσιμο με ΔκΠ
 func (g Graph) IsBipartiteBFS(start int) (isBipartite bool, v1, v2 []int) {
 	visited := make(map[int]int)
-	visited[start] = partOfV1
-	v1 = append(v1, start)
 	to_visit := []int{start}
 
-	// assume that graph is Bipartite
-	isBipartite = true
+	visited[start] = partOfV1
+	v1 = append(v1, start)
 
-	done := false
-	for len(to_visit) != 0 && !done {
+	for len(to_visit) != 0 {
+		// dequeue
 		v := to_visit[0]
 		to_visit = to_visit[1:]
 
@@ -106,14 +104,13 @@ func (g Graph) IsBipartiteBFS(start int) (isBipartite bool, v1, v2 []int) {
 					v1 = append(v1, n)
 				}
 
+				// enqueue
 				to_visit = append(to_visit, n)
 			} else if visited[n] == visited[v] {
-				isBipartite = false
-				done = true
-				return
+				return false, nil, nil
 			}
 		}
 	}
 
-	return
+	return true, v1, v2
 }
