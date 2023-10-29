@@ -31,5 +31,7 @@ func main() {
 		fmt.Println("Το γράφημα είναι διχοτομίσιμο")
 		fmt.Println("v1:", v1)
 		fmt.Println("v2:", v2)
+	} else {
+		fmt.Println("Το γράφημα δεν είναι διχοτομίσιμο")
 	}
 }
