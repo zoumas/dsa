@@ -1,19 +1,51 @@
 package sorting_test
 
 import (
+	"cmp"
+	"math/rand"
 	"slices"
 	"testing"
 
 	"github.com/zoumas/dsa/go/sorting"
 )
 
-func TestMergeSort(t *testing.T) {
-	given := []int{2, 6, 9, 5, 0, 1, 5, 3}
-	want := []int{0, 1, 2, 3, 5, 5, 6, 9}
+type testCase[T cmp.Ordered] struct {
+	name     string
+	sortFunc func(s []T) []T
+}
 
-	got := sorting.MergeSort(given)
+var testCases = []testCase[int]{
+	{
+		name:     "Bubble Sort",
+		sortFunc: sorting.BubbleSort[int],
+	},
+	{
+		name:     "Merge Sort",
+		sortFunc: sorting.MergeSort[int],
+	},
+	{
+		name:     "Insertion Sort",
+		sortFunc: sorting.InsertionSort[int],
+	},
+}
 
-	if !slices.Equal(got, want) {
-		t.Errorf("\ngot:\n%v\nwant:\n%v\ngiven:\n%v", got, want, given)
+func TestSort(t *testing.T) {
+	s := make([]int, 20)
+	for i := 0; i < len(s); i++ {
+		s[i] = rand.Intn(len(s))
+	}
+
+	for _, cs := range testCases {
+		t.Run(cs.name, func(t *testing.T) {
+			assertIsSorted(t, cs.sortFunc(s))
+		})
+	}
+}
+
+func assertIsSorted[T cmp.Ordered](t testing.TB, s []T) {
+	t.Helper()
+
+	if !slices.IsSorted(s) {
+		t.Errorf("\nSlice is not sorted\n%v", s)
 	}
 }
