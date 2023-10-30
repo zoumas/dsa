@@ -74,3 +74,31 @@ func InsertionSort[T cmp.Ordered](s []T) []T {
 
 	return sorted
 }
+
+func QuickSort[T cmp.Ordered](s []T) []T {
+	return quicksort(s, 0, len(s)-1)
+}
+
+func quicksort[T cmp.Ordered](s []T, low, high int) []T {
+	if low < high {
+		var p int
+		s, p = partition(s, low, high)
+		s = quicksort(s, low, p-1)
+		s = quicksort(s, p+1, high)
+	}
+	return s
+}
+
+func partition[T cmp.Ordered](s []T, low, high int) ([]T, int) {
+	pivot := s[high]
+
+	i := low
+	for j := low; j < high; j++ {
+		if s[j] < pivot {
+			s[i], s[j] = s[j], s[i]
+			i++
+		}
+	}
+	s[i], s[high] = s[high], s[i]
+	return s, i
+}

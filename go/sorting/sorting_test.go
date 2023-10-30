@@ -27,6 +27,10 @@ var testCases = []testCase[int]{
 		name:     "Insertion Sort",
 		sortFunc: sorting.InsertionSort[int],
 	},
+	{
+		name:     "Quick Sort",
+		sortFunc: sorting.QuickSort[int],
+	},
 }
 
 func TestSort(t *testing.T) {
