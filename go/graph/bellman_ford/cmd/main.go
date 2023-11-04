@@ -12,7 +12,6 @@ func main() {
 	if len(os.Args) == 1 {
 		return
 	}
-
 	file, err := os.Open(os.Args[1])
 	if err != nil {
 		log.Fatal(err)
@@ -23,9 +22,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Initial Graph")
+	fmt.Println("G = (V, E, W)")
 	fmt.Println(g)
 
-	fmt.Println("Bellman-Ford Shortest Paths Tree")
-	fmt.Println(g.BellmanFord(0))
+	start := 0
+	fmt.Println("Bellman Ford Shortest Paths Tree")
+	fmt.Println("Start:", start)
+	spt := g.BellmanFord(start)
+	fmt.Println("")
+	fmt.Print(spt)
 }
