@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"cmp"
 	"fmt"
-	"log"
 	"os"
 	"slices"
 	"strconv"
@@ -21,23 +20,15 @@ type Graph struct {
 }
 
 func (g *Graph) BellmanFord(start int) *Graph {
-	spt := NewGraph()
-
-	var infinity int
-	for _, v := range g.V() {
-		for _, n := range g.N(v) {
-			infinity += n.Weight
-		}
-	}
-	// Το άπειρο συμβολίζεται ως το άθροισμα όλων το βαρών του γραφήματος
-
 	order := g.Order()
+
+	inf := infinity(g)
 
 	B := make([]int, 0, order)
 	Bnew := make([]int, 0, order)
 	for i := 0; i < order; i++ {
-		B = append(B, infinity)
-		Bnew = append(Bnew, infinity)
+		B = append(B, inf)
+		Bnew = append(Bnew, inf)
 	}
 	B[start] = 0
 	Bnew[start] = 0
@@ -67,16 +58,30 @@ func (g *Graph) BellmanFord(start int) *Graph {
 		fmt.Fprintln(os.Stderr, "P:", P)
 	}
 
-	for v := 1; v < order; v++ {
-		w, ok := g.Weight(v, P[v])
+	return shortestPathsTree(g, P)
+}
+
+func shortestPathsTree(g *Graph, parent map[int]int) *Graph {
+	spt := NewGraph()
+
+	for v := 1; v < g.Order(); v++ {
+		w, ok := g.Weight(v, parent[v])
 		if ok {
-			spt.AddEdge(v, P[v], w)
-		} else {
-			log.Printf("Unable to find weight between %v and %v\n", v, P[v])
+			spt.AddEdge(v, parent[v], w)
 		}
 	}
 
 	return spt
+}
+
+func infinity(g *Graph) int {
+	var inf int
+	for _, v := range g.V() {
+		for _, n := range g.N(v) {
+			inf += n.Weight
+		}
+	}
+	return inf
 }
 
 func (g *Graph) Weight(u, v int) (w int, ok bool) {
