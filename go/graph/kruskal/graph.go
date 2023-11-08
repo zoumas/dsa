@@ -55,12 +55,15 @@ func (g *Graph) Kruskal() *Graph {
 
 	i, count := 0, 0
 	for count < g.Order()-1 {
-		if !reflect.DeepEqual(d.Find(edges[i].v), edges[i].u) {
+		if !reflect.DeepEqual(d.Find(edges[i].v), d.Find(edges[i].u)) {
 			mst.AddEdge(edges[i].v, edges[i].u, edges[i].w)
 			d.Union(edges[i].v, edges[i].u)
 			count++
 		}
 		i++
+		// Pondering
+		// Q: is this even safe?
+		// A: based on how the Graph is implemented -> yes.
 	}
 
 	return mst
